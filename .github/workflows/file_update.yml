@@ -45,7 +45,7 @@ jobs:
           id: set-matrix
           run: |
             dirs="${{ needs.search_changes.outputs.changed_dirs }}"
-            dirs="{ \"package\":[\"${dirs//,/\", \"}\" ] }"
+            dirs="{ [\"${dirs//,/\", \"}\" ] }"
             echo "json: $dirs"
             echo "matrix=$dirs" >> $GITHUB_ENV
 
@@ -71,11 +71,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dirs: ${{fromJson(needs.matrix.outputs.matrix)}}
+        dir: ${{fromJson(needs.matrix.outputs.matrix)}}
 
     steps:
-      - name: deploy ${{matrix.dirs}}
-        run: echo "${{matrix}}"
+      - name: deploy ${{matrix.dir}}
+        run: echo "${{matrix}}" && echo "${{matrix.dir}}"
 
 
 # matrix=$((
