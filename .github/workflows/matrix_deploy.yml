@@ -11,6 +11,7 @@ jobs:
       outputs:
         matrix: ${{ steps.set-matrix.outputs.matrix }}
       steps:
+        - uses: actions/checkout@v3
         - name: set matrix
           id: set-matrix
           run: |
