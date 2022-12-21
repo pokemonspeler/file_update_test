@@ -79,4 +79,6 @@ jobs:
 
     steps:
       - name: deploy ${{matrix.dir}}
-        run: echo "deploy ${{matrix.dir}}"
+        run: |
+        echo "deploy ${{matrix.dir}}"
+        echo "$GITHUB_CONTEXT"
