@@ -18,7 +18,7 @@
 # create changes
 for dir in services/*/; do
     # skip some folders
-    if [ "$[$RANDOM % 2]" = "0" ]; then
+    if [ "$[$RANDOM % 5]" != "0" ]; then
         continue
     fi
 
@@ -27,10 +27,13 @@ for dir in services/*/; do
         rnd_nr=$[$RANDOM % 4]
         if [ "$rnd_nr" = "0" ]; then
             echo "$(echo $RANDOM | md5sum)" > "$file"
+            break
         elif [ "$rnd_nr" = "1" ]; then
             echo "$(echo $RANDOM | md5sum)" >> "$file"
+            break
         elif [ "$rnd_nr" = "2" ]; then
             rm $file
+            break
         elif [ "$rnd_nr" = "3" ]; then
             continue
         fi
