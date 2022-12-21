@@ -35,7 +35,7 @@ jobs:
 
 
 
-  matrix:
+  build-matrix:
       runs-on: ubuntu-latest
       needs: [search_changes]
       outputs:
@@ -51,27 +51,27 @@ jobs:
 
   check-matrix:
     runs-on: ubuntu-latest
-    needs: [search_changes, matrix]
+    needs: [search_changes, build-matrix]
     steps:
       - name: Install json2yaml
         run: |
           sudo npm install -g json2yaml
 
-      - name: Check matrix definition
+      - name: Check matrix definition1
         run: |
-          matrix='${{ needs.matrix.outputs.matrix }}'
+          matrix='${{ needs.build-matrix.outputs.matrix }}'
           echo $matrix
           echo $matrix | jq .
           echo $matrix | json2yaml
+          ehco "${{fromJson(needs.build-matrix.outputs.matrix)}}"
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [matrix]
+    needs: [build-matrix]
 
     strategy:
       fail-fast: false
-      matrix:
-        dir: ${{fromJson(needs.matrix.outputs.matrix)}}
+      matrix: ${{fromJson(needs.build-matrix.outputs.matrix)}}
 
     steps:
       - name: deploy ${{matrix.dir}}

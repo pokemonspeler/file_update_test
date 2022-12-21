@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # create and seed folders
-for ((i=1;i<=1;i++)); do
+for ((i=1;i<=3;i++)); do
     dir=services/$(echo $RANDOM | md5sum | head -c 20)
     mkdir -p "$dir"
 
