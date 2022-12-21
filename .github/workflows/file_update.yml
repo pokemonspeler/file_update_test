@@ -79,7 +79,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(env.matrix)}}
+      matrix: ${{fromJson(${{env.matrix}})}}
 
     steps:
       - name: deploy ${{matrix.dir}}
