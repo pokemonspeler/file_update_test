@@ -4,13 +4,15 @@ on:
       changed-dirs:
         required: true
         type: string
+
 jobs:
   matrix:
       runs-on: ubuntu-latest
       outputs:
         matrix: ${{ steps.set-matrix.outputs.matrix }}
       steps:
-        - id: set-matrix
+        - name: set matrix
+          id: set-matrix
           run: |
             dirs=${{inputs.changed-dirs}}
             dirs="[ { ${dirs//,/", "} } ]"
@@ -40,5 +42,5 @@ jobs:
       matrix: ${{fromJson(needs.matrix.outputs.matrix)}}
 
     steps:
-      name: deploy ${{matrix.dir}}
-      run: echo "deploy ${{dir}}"
+      - name: deploy ${{matrix.dir}}
+        run: echo "deploy ${{dir}}"
