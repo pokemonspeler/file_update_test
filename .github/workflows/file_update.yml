@@ -34,6 +34,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: search_changes
     steps:
       - uses: ./.github/workflows/matrix_deploy.yml
         with:
