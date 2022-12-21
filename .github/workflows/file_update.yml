@@ -24,7 +24,6 @@ jobs:
             services/**
           dir_names: "true"
           separator: ","
-          since_last_remote_commit: true
 
 
       - name: Run step if any directories in the services folder change
