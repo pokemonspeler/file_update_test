@@ -79,4 +79,4 @@ jobs:
 
     steps:
       - name: deploy ${{matrix.dir}}
-        run: echo "deploy ${{dir}}"
+        run: echo "deploy ${{matrix.dir}}"
