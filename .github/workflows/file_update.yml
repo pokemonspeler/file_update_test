@@ -45,7 +45,7 @@ jobs:
           id: set-matrix
           run: |
             dirs="${{ needs.search_changes.outputs.changed_dirs }}"
-            dirs="{ \"dirs\":[\"${dirs//,/\", \"}\" ]}"
+            dirs="{ \"package\":[\"${dirs//,/\", \"}\" ] }"
             echo "json: $dirs"
             echo "matrix=$dirs" >> $GITHUB_ENV
 
@@ -70,8 +70,16 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.matrix.outputs.matrix)}}
+      matrix:
+        dirs: ${{fromJson(needs.matrix.outputs.matrix)}}
 
     steps:
-      - name: deploy ${{matrix.dir}}
+      - name: deploy ${{matrix.dirs}}
         run: echo "${{matrix}}"
+
+
+# matrix=$((
+#   echo '{ "package" : ['
+#   sed -n "/^REVDEP *:= */ { s///; p }" revdep-dev/Makefile | sed 's/ /, /g' | xargs -n 1 echo | sed -r 's/^([^,]*)(,?)$/"\1"\2/'
+#   echo " ]}"
+# ) | jq -c .)
