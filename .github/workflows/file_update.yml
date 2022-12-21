@@ -34,6 +34,6 @@ jobs:
 
   deploy:
     steps:
-      uses: ./.github/workflows/matrix_deploy.yml
-      with:
-        changed-dirs: ${{steps.changed-files-specific.outputs.all_changed_files}}
+      - uses: ./.github/workflows/matrix_deploy.yml
+        with:
+          changed-dirs: ${{steps.changed-files-specific.outputs.all_changed_files}}
