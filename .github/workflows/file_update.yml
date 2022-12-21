@@ -33,6 +33,7 @@ jobs:
           echo "List all the files that have changed: ${{ steps.changed-files-specific.outputs.all_changed_files }}"
 
   deploy:
+    runs-on: ubuntu-latest
     steps:
       - uses: ./.github/workflows/matrix_deploy.yml
         with:
