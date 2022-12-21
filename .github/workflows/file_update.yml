@@ -1,20 +1,13 @@
-name: CI
-
 on:
   # Compare the preceeding commit of main -> to the current commit of the main branch.
   # (Note: To compare changes between the last pushed commit to the remote main branch set `since_last_remote_commit: true`)
   push:
     branches:
       - master
-  # # Compare the last commit of main -> to the current commit of a PR branch.
-  # # (Note: To compare changes between the last pushed commit to the remote PR branch set `since_last_remote_commit: true`)
-  # pull_request:
-  #   branches:
-  #     - master
-
+      - changesv2
 
 jobs:
-  build:
+  search_changes:
     runs-on: ubuntu-latest
     name: Test changed-files
     steps:
@@ -22,28 +15,24 @@ jobs:
         with:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
 
-      # Example 1
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v35
-
-      - name: List all changed files
-        run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-          done
-
       # Example 2
-      - name: Get changed files in the docs folder
+      - name: Get changed files in the services folder
         id: changed-files-specific
         uses: tj-actions/changed-files@v35
         with:
           files: |
             services/**
           dir_names: "true"
+          separator: ","
 
-      - name: Run step if any file(s) in the docs folder change
+
+      - name: Run step if any directories in the services folder change
         if: steps.changed-files-specific.outputs.any_changed == 'true'
         run: |
           echo "One or more files in the docs folder has changed."
           echo "List all the files that have changed: ${{ steps.changed-files-specific.outputs.all_changed_files }}"
+
+      - name: deploy
+        uses: ./.github/workflows/matrix_deploy.yml
+        with:
+          changed-dirs: ${{steps.changed-files-specific.outputs.all_changed_files}}
