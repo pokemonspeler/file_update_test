@@ -49,11 +49,9 @@ jobs:
         - name: set matrix
           id: set-matrix
           run: |
-            echo "${{ needs.search_changes.outputs.changed_dirs }}"
             dirs="${{ needs.search_changes.outputs.changed_dirs }}"
-            echo "$dirs"
-            dirs="[ { ${dirs//,/", "} } ]"
-            echo "$dirs"
+            dirs="{ \"dirs\":[\"${dirs//,/\", \"}\" ]}"
+            echo "json: $dirs"
             echo "matrix=$dirs" >> $GITHUB_ENV
 
   check-matrix:
