@@ -49,8 +49,8 @@ jobs:
         - name: set matrix
           id: set-matrix
           run: |
-            echo "${{steps.changed-files-specific.outputs.all_changed_files}}"
-            dirs="${{steps.changed-files-specific.outputs.all_changed_files}}"
+            echo "${{needs.search_changes.outputs.all_changed_files}}"
+            dirs="${{needs.search_changes.outputs.all_changed_files}}"
             echo "$dirs"
             dirs="[ { ${dirs//,/", "} } ]"
             echo "$dirs"
