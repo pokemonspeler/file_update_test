@@ -36,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: search_changes
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/workflows/matrix_deploy.yml
         with:
           changed-dirs: ${{steps.changed-files-specific.outputs.all_changed_files}}
