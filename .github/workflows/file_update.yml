@@ -48,7 +48,7 @@ jobs:
         - name: set matrix
           id: set-matrix
           run: |
-            dirs=${{inputs.changed-dirs}}
+            dirs=${{steps.changed-files-specific.outputs.all_changed_files}}
             dirs="[ { ${dirs//,/", "} } ]"
             echo "$dirs"
             echo "::set-output name=matrix::$dirs"
@@ -69,6 +69,7 @@ jobs:
   #         echo $matrix | json2yaml
 
   deploy:
+    runs-on: ubuntu-latest
     needs: [search_changes, matrix]
 
     strategy:
