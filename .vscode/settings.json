@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "pokemonspeler",
+        "projectKey": "pokemonspeler_file_update_test"
+    }
+}
