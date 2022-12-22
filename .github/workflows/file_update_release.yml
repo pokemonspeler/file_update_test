@@ -1,0 +1,82 @@
+name: Deploy Production
+on:
+  release:
+    - published
+
+jobs:
+  get_previous_release:
+    runs-on: ubuntu-latest
+    name: Get previous release
+    outputs:
+      last_release_sha: ${{env.sha}}
+    steps:
+      - name: find sha
+        run: |
+          echo $(rev-list -n 2 --tags) > tags.tmp
+          env=$(tail -n 1 tags.tmp)
+          echo "sha=$sha" >> $GITHUB_ENV
+
+  search_changes:
+    runs-on: ubuntu-latest
+    name: Get changed dirs
+    needs: [ get_previous_release ]
+    outputs:
+      changed_dirs: ${{ steps.changed-dirs-specific.outputs.all_changed_files }}
+      dirs_changed: ${{ steps.changed-dirs-specific.outputs.any_changed }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get changed dirs in the services folder
+        id: changed-dirs-specific
+        uses: tj-actions/changed-files@v35
+        with:
+          files: |
+            services/**
+          dir_names: "true"
+          separator: ","
+          base_sha: ${{ neesd.get_previous_release.outputs.sha }}
+
+  build-matrix:
+      runs-on: ubuntu-latest
+      needs: [search_changes]
+      if: needs.search_changes.outputs.dirs_changed == 'true'
+      outputs:
+        matrix: ${{ env.matrix }}
+      steps:
+        - name: set matrix
+          id: set-matrix
+          run: |
+            dirs="${{ needs.search_changes.outputs.changed_dirs }}"
+            dirs="{ \"dir\":[\"${dirs//,/\", \"}\" ] }"
+            echo "json: $dirs"
+            echo "matrix=$dirs" >> $GITHUB_ENV
+
+  check-matrix:
+    runs-on: ubuntu-latest
+    needs: [build-matrix]
+    steps:
+      - name: Install json2yaml
+        run: |
+          sudo npm install -g json2yaml
+
+      - name: Check matrix definition1
+        run: |
+          matrix='${{ needs.build-matrix.outputs.matrix }}'
+          echo $matrix
+          echo $matrix | jq .
+          echo $matrix | json2yaml
+          echo "${{fromJson(needs.build-matrix.outputs.matrix)}}"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build-matrix]
+
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.build-matrix.outputs.matrix)}}
+
+    steps:
+      - name: deploy ${{matrix.dir}}
+        run: echo "deploying ${{matrix.dir}}"
