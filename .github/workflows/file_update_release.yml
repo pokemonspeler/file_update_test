@@ -36,7 +36,7 @@ jobs:
             services/**
           dir_names: "true"
           separator: ","
-          base_sha: ${{ neesd.get_previous_release.outputs.sha }}
+          base_sha: ${{ needs.get_previous_release.outputs.sha }}
 
   build-matrix:
       runs-on: ubuntu-latest
