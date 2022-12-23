@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# branch=$(echo $RANDOM | md5sum | head -c 9); git checkout -b "$branch"; git push -u origin "$branch"; for ((j=1;j<=3;j++)); do ./changes.sh && git add . && git commit -m "changes" && git push; done; git checkout master
+
 # create and seed folders
 # for ((i=1;i<=30;i++)); do
 #     dir=services/$(echo $RANDOM | md5sum | head -c 20)
