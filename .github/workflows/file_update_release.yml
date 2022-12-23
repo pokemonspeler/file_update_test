@@ -16,7 +16,9 @@ jobs:
       - name: find sha
         run: |
           echo $(git rev-list -n 2 --tags) > tags.tmp
+          cat tags.tmp
           env=$(tail -n 1 tags.tmp)
+          echo "$env"
           echo "sha=$sha" >> $GITHUB_ENV
 
   search_changes:
