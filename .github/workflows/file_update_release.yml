@@ -1,7 +1,7 @@
 name: Deploy Production
 on:
   release:
-    - published
+    types: published
 
 jobs:
   get_previous_release:
