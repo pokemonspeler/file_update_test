@@ -10,6 +10,9 @@ jobs:
     outputs:
       last_release_sha: ${{env.sha}}
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: find sha
         run: |
           echo $(git rev-list -n 2 --tags) > tags.tmp
