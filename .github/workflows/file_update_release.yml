@@ -31,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - run: echo ${{needs.get_previous_release.outputs.sha}}
+      - run: echo ${{needs.get_previous_release.outputs.last_release_sha}}
 
       - name: Get changed dirs in the services folder
         id: changed-dirs-specific
@@ -41,7 +41,7 @@ jobs:
             services/**
           dir_names: "true"
           separator: ","
-          base_sha: ${{ needs.get_previous_release.outputs.sha }}
+          base_sha: ${{ needs.get_previous_release.outputs.last_release_sha }}
 
   build-matrix:
       runs-on: ubuntu-latest
