@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: find sha
         run: |
-          echo $(rev-list -n 2 --tags) > tags.tmp
+          echo $(git rev-list -n 2 --tags) > tags.tmp
           env=$(tail -n 1 tags.tmp)
           echo "sha=$sha" >> $GITHUB_ENV
 
