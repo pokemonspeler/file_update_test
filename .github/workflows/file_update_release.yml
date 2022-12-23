@@ -15,11 +15,9 @@ jobs:
           fetch-depth: 0
       - name: find sha
         run: |
-          echo $(git rev-list -n 2 --tags) > tags.tmp
-          cat tags.tmp
-          env=$(tail -n 1 tags.tmp)
-          echo "$env"
-          echo "sha=$sha" >> $GITHUB_ENV
+          tag=$(git show-ref --tags | tail -n 2 | head -n 1)
+          echo "$tag"
+          echo "sha=$(echo "$tag" | head -c 40)" >> $GITHUB_ENV
 
   search_changes:
     runs-on: ubuntu-latest
