@@ -16,7 +16,7 @@ jobs:
       - name: find sha
         run: |
           tag=$(git show-ref --tags | tail -n 2 | head -n 1)
-          echo "$tag"
+          echo "found $tag"
           echo "sha=$(echo "$tag" | head -c 40)" >> $GITHUB_ENV
 
   search_changes:
@@ -31,9 +31,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - run: echo ${{needs.get_previous_release.outputs.last_release_sha}}
-
-      - name: Get changed dirs in the services folder
+      - name: Get changed dirs in the services folder since ${{ needs.get_previous_release.outputs.last_release_sha }}
         id: changed-dirs-specific
         uses: tj-actions/changed-files@v35
         with:
@@ -55,7 +53,7 @@ jobs:
           run: |
             dirs="${{ needs.search_changes.outputs.changed_dirs }}"
             dirs="{ \"dir\":[\"${dirs//,/\", \"}\" ] }"
-            echo "json: $dirs"
+            echo "matrix: $dirs"
             echo "matrix=$dirs" >> $GITHUB_ENV
 
   check-matrix:
@@ -66,7 +64,7 @@ jobs:
         run: |
           sudo npm install -g json2yaml
 
-      - name: Check matrix definition1
+      - name: Check matrix definition
         run: |
           matrix='${{ needs.build-matrix.outputs.matrix }}'
           echo $matrix
