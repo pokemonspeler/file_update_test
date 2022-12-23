@@ -31,6 +31,8 @@ jobs:
         with:
           fetch-depth: 0
 
+      - run: echo ${{needs.get_previous_release.outputs.sha}}
+
       - name: Get changed dirs in the services folder
         id: changed-dirs-specific
         uses: tj-actions/changed-files@v35
