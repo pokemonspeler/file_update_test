@@ -49,7 +49,13 @@ jobs:
           id: set-matrix
           run: |
             dirs="${{ needs.search_changes.outputs.changed_dirs }}"
-            dirs="{ \"dir\":[\"${dirs//,/\", \"}\" ] }"
+            for folder in ${dirs//,/ }; do
+                tmp_dirs="$tmp_dirs $(echo "$folder" | cut -f1,2 -d'/')"
+            done
+            dirs=$(echo "$tmp_dirs" | sort -u )
+            dirs=${dirs// /,}
+            dirs=${dirs:1}
+            dirs="{ \"dir\": [\"${dirs//,/\", \"}\"] }"
             echo "json: $dirs"
             echo "matrix=$dirs" >> $GITHUB_ENV
 

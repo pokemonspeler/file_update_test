@@ -1,0 +1,11 @@
+#!/bin/bash
+
+data="services/d1ffbb1a42315d6f181,services/6a7c66f67be9cdaa2b3c,services/734/7f294bf52be77ff6,services/89/6ac1e24f1/1f2aaa2,services/8bf9a47eff172aa4b1/4,services/9132/f763496994d98f,services/ad7ad8f8f/d74a8/89/b,services/adb8eeca3579e3f511/1,services/b6cb437aa148cce31165,services/ba/b/ece5/4/4f1ec8ad,services/cf2/da4e54f/b6a827d4,services/d7/28dcf4d5b38568a45,services/e8fc7c99c/72d/a66/d8,services/d1ffbb1a4231/d6f181,services/6a7c66f67be9cdaa2b3c,services/734/7f294bf/2be77ff6,services/89/6ac1e24f1/1f2aaa2,services/8bf9a47eff172aa4b1/4,services/9132/f763496994d98f,services/ad7ad8f8f/d74a8/89/b,services/adb8eeca3/79e3f/11/1,services/b6cb437aa148cce3116,services/ba/b/ece//4/4f1ec8ad,services/cf2/da4e/4f/b6a827d4,services/d7/28dcf4d/b38/68a4,services/e8fc7c99c/72d/a66/d8"
+# data="${{}}"
+for folder in ${data//,/ }; do
+    tmp_data="$tmp_data $(echo "$folder" | cut -f1,2 -d'/')"
+done
+data=$(echo "$tmp_data" | sort -u )
+data=${data// /,}
+data=${data:1}
+echo "{ \"dir\": [\"${data//,/\", \"}\"] }"
