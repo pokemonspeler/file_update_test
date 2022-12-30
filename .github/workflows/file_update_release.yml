@@ -1,7 +1,7 @@
 name: Deploy Production
 on:
   release:
-    - published
+    types: published
 
 jobs:
   get_previous_release:
@@ -10,11 +10,14 @@ jobs:
     outputs:
       last_release_sha: ${{env.sha}}
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: find sha
         run: |
-          echo $(rev-list -n 2 --tags) > tags.tmp
-          env=$(tail -n 1 tags.tmp)
-          echo "sha=$sha" >> $GITHUB_ENV
+          tag=$(git show-ref --tags | tail -n 2 | head -n 1)
+          echo "found $tag"
+          echo "sha=$(echo "$tag" | head -c 40)" >> $GITHUB_ENV
 
   search_changes:
     runs-on: ubuntu-latest
@@ -28,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get changed dirs in the services folder
+      - name: Get changed dirs in the services folder since ${{ needs.get_previous_release.outputs.last_release_sha }}
         id: changed-dirs-specific
         uses: tj-actions/changed-files@v35
         with:
@@ -36,7 +39,7 @@ jobs:
             services/**
           dir_names: "true"
           separator: ","
-          base_sha: ${{ neesd.get_previous_release.outputs.sha }}
+          base_sha: ${{ needs.get_previous_release.outputs.last_release_sha }}
 
   build-matrix:
       runs-on: ubuntu-latest
@@ -67,7 +70,7 @@ jobs:
         run: |
           sudo npm install -g json2yaml
 
-      - name: Check matrix definition1
+      - name: Check matrix definition
         run: |
           matrix='${{ needs.build-matrix.outputs.matrix }}'
           echo $matrix
